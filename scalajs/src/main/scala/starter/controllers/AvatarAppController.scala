@@ -92,36 +92,14 @@ object AvatarAppController extends Controller {
         |<md-bottom-sheet class="md-list md-has-header">
         |  <md-subheader>Avatar Actions</md-subheader>
         |  <md-list>
-        |    <md-item ng-repeat="item in vm.items">
-        |      <md-button ng-click="vm.performAction(item)">{{item.name}}</md-button>
+        |    <md-item ng-repeat="item in vm.controller.items">
+        |      <md-button ng-click="vm.controller.performAction(item)">{{item.name}}</md-button>
         |    </md-item>
         |  </md-list>
         |</md-bottom-sheet>
       """.stripMargin
-    options.bindToController = true
     options.controllerAs = "vm"
-
-    class AvatarSheetController(bottomSheet: BottomSheet) {
-
-      @JSExport
-      val items: js.Array[Item] = Array(
-        Item("Share", "share"),
-        Item("Copy", "copy"),
-        Item("Impersonate", "impersonate"),
-        Item("Singalong", "singalong")
-      ).toJSArray
-
-      @JSExport
-      def performAction(action: Item): Unit = bottomSheet.hide(action)
-    }
-
-    @JSExportAll
-    case class Item(name: String, icon: String)
-
-    val avatarSheetController: js.Function1[BottomSheet, AvatarSheetController] =
-      (bottomSheet: BottomSheet) => new AvatarSheetController(bottomSheet)
-
-    options.controller = Array[Any]("$mdBottomSheet", avatarSheetController).toJSArray
+    options.controller = AvatarSheetController.name
     options.targetEvent = event
 
     val f: Future[Item] = bottomSheet.show(options)
@@ -136,5 +114,23 @@ object AvatarAppController extends Controller {
 
     var avatars: js.Array[Avatar] = js.native
   }
-
 }
+
+object AvatarSheetController extends Controller {
+
+  var bottomSheet: BottomSheet = _
+
+  @JSExport
+  val items: js.Array[Item] = Array(
+    Item("Share", "share"),
+    Item("Copy", "copy"),
+    Item("Impersonate", "impersonate"),
+    Item("Singalong", "singalong")
+  ).toJSArray
+
+  @JSExport
+  def performAction(action: Item): Unit = bottomSheet.hide(action)
+}
+
+@JSExportAll
+case class Item(name: String, icon: String)

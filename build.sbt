@@ -1,15 +1,11 @@
 import PlayKeys._
-import EclipseKeys._
-import play.twirl.sbt.Import.TwirlKeys._
 
 import com.typesafe.sbt.packager.universal.Keys.dist
 import com.typesafe.sbt.packager.Keys.stage
 
 name := "scalajs-angular-material-start"
 
-scalaVersion in ThisBuild := "2.11.5"
-
-scalacOptions in ThisBuild ++= Seq("-deprecation", "-unchecked", "-feature")
+scalaVersion in ThisBuild := "2.11.6"
 
 val scalajsOutputDir = Def.settingKey[File]("directory for javascript files output by scalajs")
 
@@ -24,8 +20,6 @@ val crossTargetSettings =
 
 resolvers in ThisBuild += Resolver.sonatypeRepo("snapshots")
 
-resolvers in ThisBuild += "Local Maven Repository" at "file:///"+Path.userHome+"/.m2/repository"
-
 lazy val server = (project in file("scalajvm"))
   .enablePlugins(PlayScala)
   .enablePlugins(SbtWeb)
@@ -36,13 +30,8 @@ lazy val server = (project in file("scalajvm"))
     stage <<= stage dependsOn (fullOptJS in (client, Compile)),
     dist <<= dist dependsOn (fullOptJS in (client, Compile)),
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-jdbc" % "2.3.7",
-      "com.h2database" % "h2" % "1.4.185",
-      "com.jsuereth" %% "scala-arm" % "1.4",
-      "com.github.benhutchison" %% "prickle" % "1.1.3",
-      "org.webjars" % "angular-material" % "0.7.1-SNAPSHOT"
-    ),
-    skipParents in ThisBuild := false)
+      "org.webjars" % "angular-material" % "0.7.1"
+    ))
   .settings(crossTargetSettings: _*)
   .dependsOn(common)
   .aggregate(client)
@@ -54,21 +43,14 @@ lazy val client = (project in file("scalajs"))
     unmanagedSourceDirectories in Compile := (scalaSource in Compile).value ::(scalaSource in Test).value :: Nil,
     unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil,
     libraryDependencies ++= Seq(
-      "com.greencatsoft" %%% "scalajs-angular" % "0.4-SNAPSHOT",
-      "org.scala-js" %%% "scalajs-dom" % "0.8.0",
-      "be.doeraene" %%% "scalajs-jquery" % "0.8.0",
-      "com.github.benhutchison" %%% "prickle" % "1.1.3",
-      "com.lihaoyi" %%% "scalatags" % "0.4.5"),
+      "com.greencatsoft" %%% "scalajs-angular" % "0.5-SNAPSHOT"),
     jsDependencies ++= Seq(
-      "org.webjars" % "jquery" % "2.1.3" / "jquery.min.js",
-      "org.webjars" % "angularjs" % "1.3.11" / "angular.js" dependsOn "angular-file-upload-shim.js",
-      "org.webjars" % "angularjs" % "1.3.11" / "angular-route.js" dependsOn "angular.js",
-      "org.webjars" % "angularjs" % "1.3.11" / "angular-animate.js" dependsOn "angular.js",
-      "org.webjars" % "angularjs" % "1.3.11" / "angular-aria.js" dependsOn "angular.js",
-      "org.webjars" % "angularjs" % "1.3.11" / "angular-locale_ko.js" dependsOn "angular.js",
-      "org.webjars" % "angular-material" % "0.7.1-SNAPSHOT" / "angular-material.js" dependsOn "angular.js",
-      "org.webjars" % "angular-file-upload" % "3.0.2" / "angular-file-upload-shim.js" dependsOn "jquery.min.js",
-      "org.webjars" % "angular-file-upload" % "3.0.2" / "angular-file-upload.js" dependsOn "angular.js",
+      "org.webjars" % "angularjs" % "1.3.15" / "angular.js",
+      "org.webjars" % "angularjs" % "1.3.15" / "angular-route.js" dependsOn "angular.js",
+      "org.webjars" % "angularjs" % "1.3.15" / "angular-animate.js" dependsOn "angular.js",
+      "org.webjars" % "angularjs" % "1.3.15" / "angular-aria.js" dependsOn "angular.js",
+      "org.webjars" % "angularjs" % "1.3.15" / "angular-locale_ko.js" dependsOn "angular.js",
+      "org.webjars" % "angular-material" % "0.7.1" / "angular-material.js" dependsOn "angular.js",
       RuntimeDOM),
     skip in packageJSDependencies := false,
     relativeSourceMaps := true

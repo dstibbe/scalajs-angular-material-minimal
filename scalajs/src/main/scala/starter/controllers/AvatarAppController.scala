@@ -2,7 +2,7 @@ package starter.controllers
 
 import com.greencatsoft.angularjs.core.{Log, Scope}
 import com.greencatsoft.angularjs.extensions.material.{BottomSheet, BottomSheetOptions, Sidenav}
-import com.greencatsoft.angularjs.{Angular, Controller, inject}
+import com.greencatsoft.angularjs.{Angular, Controller, inject, injectable}
 import org.scalajs.dom
 import org.scalajs.dom.document
 import starter.services.{Avatar, AvatarService}
@@ -14,16 +14,15 @@ import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.UndefOr
 import scala.scalajs.js.annotation.{JSExport, JSExportAll}
 
-/**
- * Main Controller for the Angular Material Starter App
- *
- * https://github.com/angular/material-start/blob/master/app/src/avatars/avatarService.js
- */
-object AvatarAppController extends Controller {
+/** Main Controller for the Angular Material Starter App
+  *
+  * https://github.com/angular/material-start/blob/master/app/src/avatars/avatarService.js
+  */
+@injectable("AppCtrl")
+object AvatarAppController extends Controller[AvatarAppScope] {
 
-  override val name = "AppCtrl"
-
-  override type ScopeType = AvatarAppScope
+  @inject
+  var scope: AvatarAppScope = _
 
   @inject
   var sidenav: Sidenav = _
@@ -34,7 +33,9 @@ object AvatarAppController extends Controller {
   @inject
   var log: Log = _
 
-  override def initialize(scope: ScopeType) {
+  override def initialize() {
+    super.initialize()
+
     scope.selected = null
     scope.avatars = js.Array()
 
@@ -68,20 +69,18 @@ object AvatarAppController extends Controller {
     toggleSidenav("left")
   }
 
-  /**
-   * Select the current avatars
-   * @param avatar
-   */
+  /** Select the current avatars
+    * @param avatar
+    */
   @JSExport
   def selectAvatar(avatar: Avatar) {
     scope.selected = avatar
     toggleSidenav("left")
   }
 
-  /**
-   * Show the bottom sheet
-   * @param event
-   */
+  /** Show the bottom sheet
+    * @param event
+    */
   @JSExport
   def showActions(event: dom.MouseEvent) {
     val options = new js.Object().asInstanceOf[BottomSheetOptions]
@@ -99,7 +98,7 @@ object AvatarAppController extends Controller {
         |</md-bottom-sheet>
       """.stripMargin
     options.controllerAs = "vm"
-    options.controller = AvatarSheetController.name
+    options.controller = "sheetCtrl"
     options.targetEvent = event
 
     val f: Future[Item] = bottomSheet.show(options)
@@ -108,15 +107,20 @@ object AvatarAppController extends Controller {
     }
   }
 
-  trait AvatarAppScope extends Scope {
-
-    var selected: UndefOr[Avatar] = js.native
-
-    var avatars: js.Array[Avatar] = js.native
-  }
 }
 
-object AvatarSheetController extends Controller {
+trait AvatarAppScope extends Scope {
+
+  var selected: UndefOr[Avatar] = js.native
+
+  var avatars: js.Array[Avatar] = js.native
+}
+
+@injectable("sheetCtrl")
+object AvatarSheetController extends Controller[Scope] {
+
+  @inject
+  var scope: Scope = _
 
   var bottomSheet: BottomSheet = _
 

@@ -7,9 +7,7 @@ import starter.controllers.{AvatarAppController, AvatarSheetController}
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 
-/**
- * @see https://github.com/angular/material-start/blob/master/app/app.js
- */
+/** @see https://github.com/angular/material-start/blob/master/app/app.js */
 @JSExport
 object StarterApp extends JSApp with Config {
 

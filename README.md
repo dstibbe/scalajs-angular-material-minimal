@@ -1,9 +1,11 @@
---- Description
+Description
+-----------
 
 Minimal Scope and Controller for demo purposes for a friend
 
 
---- Instructions
+Instructions
+-----------
 
 ```
 sbt playme

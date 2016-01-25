@@ -2,7 +2,7 @@ package starter
 
 import com.greencatsoft.angularjs.extensions.material.ThemingProvider
 import com.greencatsoft.angularjs.{Angular, Config, inject}
-import starter.controllers.{AvatarAppController, AvatarSheetController}
+import starter.controllers.{MonkeyAppController}
 
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
@@ -16,8 +16,7 @@ object StarterApp extends JSApp with Config {
 
   override def main() {
     val module = Angular.module("starterApp", Seq("ngMaterial"))
-    module.controller(AvatarSheetController)
-    module.controller(AvatarAppController)
+    module.controller(MonkeyAppController)
     module.config(this)
   }
 

@@ -22,7 +22,7 @@
       <button ng-click="controller.toggleSidenav('left')" hide-gt-sm class="menuBtn">
         <span class="visuallyhidden">Menu</span>
       </button>
-      <h1>AngularJS Material App</h1>
+      <h1>AngularJS Scalajs Monkeys</h1>
     </md-toolbar>
 
     <!--
@@ -34,33 +34,14 @@
 
       <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-sm')">
         <md-list>
-          <md-item ng-repeat="it in avatars">
+          <md-item ng-repeat="monkey in controller.showMonkeys()">
             <md-item-content>
-              <md-button ng-click="controller.selectAvatar(it)" ng-class="{'selected' : it === selected }">
-                <span class="{{it.classname}} avatar"></span>
-                {{it.name}}
-              </md-button>
+                <span>{{monkey.name}} + {{monkey.color}} + {{monkey.action}}</span>
             </md-item-content>
           </md-item>
         </md-list>
       </md-sidenav>
-
-      <!--
-          Use `flex` [below] to have the content area
-          fill the available horizontal display area on the right side
-      -->
-
-      <div layout="column" flex class="content-wrapper" id="content">
-        <md-content layout="column" flex class="md-padding">
-            <span class="{{selected.classname}} avatar" role="img" aria-label="{{selected.name}}"></span>
-            <h2>{{selected.name}}</h2>
-            <p>{{selected.content}}</p>
-            <md-button class="action actionBtn" ng-click="controller.showActions($event)">
-              <span class="visuallyhidden">Actions</span>
-            </md-button>
-        </md-content>
-      </div>
-    </div>
+	</div>
 
     <script src="@routes.Assets.versioned("js/example-client-jsdeps.js")"></script>
     @if(!Play.isProd(Play.current)) {

@@ -43,7 +43,7 @@ lazy val client = (project in file("scalajs"))
     unmanagedSourceDirectories in Compile := (scalaSource in Compile).value ::(scalaSource in Test).value :: Nil,
     unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil,
     libraryDependencies ++= Seq(
-      "com.greencatsoft" %%% "scalajs-angular" % "0.5-SNAPSHOT"),
+      "com.greencatsoft" %%% "scalajs-angular" % "0.6"),
     jsDependencies ++= Seq(
       "org.webjars" % "angularjs" % "1.3.15" / "angular.js",
       "org.webjars" % "angularjs" % "1.3.15" / "angular-route.js" dependsOn "angular.js",
@@ -67,3 +67,12 @@ lazy val common = (project in file("scala"))
       "org.scala-js" %% "scalajs-stubs" % scalaJSVersion),
     relativeSourceMaps := true
 )
+
+commands += Command.command("playme")((state: State) => {
+  var newState = state
+  //newState = Command.process("clean", newState)
+  newState = Command.process("compile", newState)
+  newState = Command.process("project server", newState)
+  newState = Command.process("run", newState)
+  newState
+})
